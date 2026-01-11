@@ -1,0 +1,117 @@
+openapi: 3.0.0
+
+info:
+  title: Road Repair Request API
+  description: API for managing road repair requests
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Server is running
+
+  /requests:
+    get:
+      summary: Get all road repair requests
+      responses:
+        '200':
+          description: List of requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoadRequest'
+
+    post:
+      summary: Create a new road repair request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoadRequest'
+      responses:
+        '201':
+          description: Request created
+        '400':
+          description: Invalid input
+
+  /requests/{id}:
+    put:
+      summary: Update request status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: IN_PROGRESS
+      responses:
+        '200':
+          description: Status updated
+        '404':
+          description: Request not found
+
+    delete:
+      summary: Delete a road repair request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Request deleted
+        '404':
+          description: Request not found
+
+components:
+  schemas:
+    RoadRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Pothole on main road
+        description:
+          type: string
+          example: Large pothole near the bus stop
+        address:
+          type: string
+          example: Kyiv, Shevchenko street 10
+        status:
+          type: string
+          example: NEW
+
+    CreateRoadRequest:
+      type: object
+      required:
+        - title
+        - address
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        address:
+          type: string

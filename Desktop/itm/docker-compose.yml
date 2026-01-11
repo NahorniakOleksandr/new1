@@ -1,0 +1,6 @@
+services:
+  api:
+    build: .
+    ports:
+      - "3002:3001"
+    command: node server.js
