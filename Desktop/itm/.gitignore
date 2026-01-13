@@ -1,0 +1,9 @@
+node_modules/
+database.sqlite
+.DS_Store
+.env
+*.log
+.vscode/
+.idea/
+.cache/
+npm-debug.log*

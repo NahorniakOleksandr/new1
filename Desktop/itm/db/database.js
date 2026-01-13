@@ -1,16 +1,14 @@
 import sqlite3 from "sqlite3";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const db = new sqlite3.Database("database.sqlite");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS requests (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT,
-      address TEXT,
-      status TEXT
-    )
-  `);
-});
+const dbPath = path.join(__dirname, "../database.sqlite");
+
+console.log("DB PATH USED:", dbPath);
+
+const db = new sqlite3.Database(dbPath);
 
 export default db;

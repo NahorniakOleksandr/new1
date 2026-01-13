@@ -1,51 +1,59 @@
 openapi: 3.0.0
-
 info:
-  title: Road Repair Request API
-  description: API for managing road repair requests
+  title: Road Requests API
   version: 1.0.0
+  description: API for managing road repair requests
 
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:3001
 
 paths:
-  /health:
-    get:
-      summary: Health check
-      responses:
-        '200':
-          description: Server is running
-
   /requests:
     get:
-      summary: Get all road repair requests
+      summary: Get all requests
       responses:
-        '200':
+        "200":
           description: List of requests
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/RoadRequest'
+                  $ref: "#/components/schemas/Request"
 
     post:
-      summary: Create a new road repair request
+      summary: Create new request
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateRoadRequest'
+              $ref: "#/components/schemas/RequestCreate"
       responses:
-        '201':
-          description: Request created
-        '400':
-          description: Invalid input
+        "201":
+          description: Created
 
   /requests/{id}:
+    get:
+      summary: Get request by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Request"
+        "404":
+          description: Not found
+
     put:
-      summary: Update request status
+      summary: Update request
       parameters:
         - name: id
           in: path
@@ -57,19 +65,13 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                status:
-                  type: string
-                  example: IN_PROGRESS
+              $ref: "#/components/schemas/RequestUpdate"
       responses:
-        '200':
-          description: Status updated
-        '404':
-          description: Request not found
+        "200":
+          description: Updated
 
     delete:
-      summary: Delete a road repair request
+      summary: Delete request
       parameters:
         - name: id
           in: path
@@ -77,33 +79,24 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
-          description: Request deleted
-        '404':
-          description: Request not found
+        "200":
+          description: Deleted
 
 components:
   schemas:
-    RoadRequest:
+    Request:
       type: object
       properties:
         id:
           type: integer
-          example: 1
         title:
           type: string
-          example: Pothole on main road
-        description:
-          type: string
-          example: Large pothole near the bus stop
         address:
           type: string
-          example: Kyiv, Shevchenko street 10
         status:
           type: string
-          example: NEW
 
-    CreateRoadRequest:
+    RequestCreate:
       type: object
       required:
         - title
@@ -111,7 +104,19 @@ components:
       properties:
         title:
           type: string
-        description:
+        address:
+          type: string
+
+    RequestUpdate:
+      type: object
+      required:
+        - title
+        - address
+        - status
+      properties:
+        title:
           type: string
         address:
+          type: string
+        status:
           type: string
